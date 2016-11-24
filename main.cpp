@@ -10,7 +10,6 @@
 #include <stdio.h>
 
 #include <cmath>
-#include <armadillo>
 
 #include "api/inc/fmod.h"
 #include "api/inc/fmod_codec.h"
@@ -18,7 +17,6 @@
 #include "api/inc/fmod_memoryinfo.h"
 
 using namespace std;
-using namespace arma;
 
 static void error_callback(int error, const char* description)
 {
@@ -32,15 +30,6 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
 int win_x = 1340;
 int win_y = 640;
-vec2 mouse_x;
-static void cursor_pos_callback(GLFWwindow* window, double x_, double y_)
-{
-    mouse_x(0) = 4.*(x_*1./win_x-0.5);
-    mouse_x(1) = 4.*(0.5-y_*1./win_y);
-
-}
-
-
 
 GLFWwindow * window = nullptr;
 const int OUTPUT_RATE = 44100;
@@ -100,7 +89,6 @@ int init_gl_window()
 
     glfwSwapInterval(1);
     glfwSetKeyCallback(window, key_callback);
-    glfwSetCursorPosCallback(window, cursor_pos_callback);
     return 0;
 }
 
@@ -149,9 +137,7 @@ int main(int argc,char ** argv)
         {
             s[M*i+idx_t] = (log(fabs(s[M*i+idx_t])+1e-10)+10.0)/40.0;
         }
-        //cx_vec aux = fft(conv_to<vec>::from(aux_1));
-        //sL = conv_to<fvec>::from(real(aux));
-        //sR = conv_to<fvec>::from(imag(aux));
+        
         S.bind_();
             glTexImage2D(GL_TEXTURE_2D,0,GL_RED,M,2*SPEC_SIZE,0,GL_RED,GL_FLOAT,s);
             glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
@@ -174,14 +160,14 @@ int main(int argc,char ** argv)
 
         show_.end();
         S.unbind_();
+        
         t += 1.0/60.0;
-
         idx_t = (idx_t+1)%M;
-        //if(idx_t == 0);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+    
     glfwDestroyWindow(window);
     glfwTerminate();
     exit(EXIT_SUCCESS);
