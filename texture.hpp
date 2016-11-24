@@ -5,11 +5,6 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 
-#include <opencv2/opencv.hpp>
-#include <armadillo>
-
-using namespace arma;
-
 template<GLuint type_>
 struct tex_
 {
